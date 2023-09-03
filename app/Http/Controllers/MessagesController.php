@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Messages;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MessagesController extends Controller
 {
@@ -46,9 +47,15 @@ class MessagesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Messages $messages)
+    public function show()
     {
-        //
+        if (Auth::check() && Auth::user()->id == 1) {
+            return view('dashboard')->with('messages', Messages::all());
+        }
+    }
+
+    public function getDetails($id) {
+        return response()->json(Messages::where("id", "=", $id)->get());
     }
 
     /**
